@@ -53,7 +53,7 @@ app.post('/api/submit-form', async (req, res) => {
             phone:formData.phone,
             email:formData.email,
             subject:formData.subject,
-            content: formData.content
+            content: formData.message
           },
           // text: `
           //   Name: ${formData.name}
