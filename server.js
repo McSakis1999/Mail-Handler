@@ -45,7 +45,7 @@ app.post('/api/submit-form', async (req, res) => {
         // Create email content
         const mailOptions = {
           from: 'sakismitsikostas@gmail.com', // Replace with your email address
-          to: 'sakismitsikostas@gmail.com', // Replace with the recipient's email address
+          to: process.env.EMAIL_TO, // Replace with the recipient's email address
           template: "email",
           subject: formData.subject,
           context: {
