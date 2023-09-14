@@ -39,6 +39,8 @@ app.post('/api/submit-form', async (req, res) => {
         user: process.env.EMAIL_USER, // Replace with your email address
         pass: process.env.EMAIL_PASS, // Replace with your email password or use environment variables for security
       },
+      port : 587,
+      secure: false
     });
     transporter.use('compile', hbs(handlebarOptions))
     
