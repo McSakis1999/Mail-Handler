@@ -34,11 +34,90 @@ app.post('/api/submit-form', async (req, res) => {
           from: 'sakismitsikostas@gmail.com', // Replace with your email address
           to: 'sakismitsikostas@gmail.com', // Replace with the recipient's email address
           subject: formData.subject,
-          text: `
-            Name: ${formData.name}
-            Email: ${formData.email} - Phone: ${formData.phone}
-            Message: ${formData.message}
-          `,
+          // text: `
+          //   Name: ${formData.name}
+          //   Email: ${formData.email} - Phone: ${formData.phone}
+          //   Message: ${formData.message}
+          // `,
+          text : `<html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Contact Form Inquiry</title>
+              <style>
+                  /* Reset some default styles to ensure consistent rendering in email clients */
+                  body, table, td, a {
+                      font-family: Arial, sans-serif;
+                      font-size: 14px;
+                  }
+                  table {
+                      border-collapse: collapse;
+                  }
+                  td {
+                      padding: 10px;
+                      border: 1px solid #dddddd;
+                  }
+                  a {
+                      color: #007bff;
+                      text-decoration: none;
+                  }
+                  /* Style your email content here */
+                  .email-container {
+                      max-width: 600px;
+                      margin: 0 auto;
+                      padding: 20px;
+                  }
+                  .header {
+                      background-color: #007bff;
+                      color: #fff;
+                      text-align: center;
+                      padding: 20px;
+                  }
+                  .content {
+                      padding: 20px;
+                  }
+                  .message {
+                      border: 1px solid #dddddd;
+                      padding: 10px;
+                  }
+              </style>
+          </head>
+          <body>
+              <div class="email-container">
+                  <div class="header">
+                      <h1>Contact Form Inquiry</h1>
+                  </div>
+                  <div class="content">
+                      <p>Hello,</p>
+                      <p>You have received a new inquiry from a customer: </p>
+                      <table>
+                          <tr>
+                              <td><strong>Name:</strong></td>
+                              <td>${formData.name}</td> <!-- Replace with customer's name -->
+                          </tr>
+                          <tr>
+                              <td><strong>Email:</strong></td>
+                              <td>${formData.email}</td> <!-- Replace with customer's email -->
+                          </tr>
+                          <tr>
+                              <td><strong>Phone:</strong></td>
+                              <td>${formData.phone}</td> <!-- Replace with customer's phone number -->
+                          </tr>
+                          <tr>
+                              <td><strong>Subject:</strong></td>
+                              <td>${formData.subject}</td> <!-- Replace with subject from the contact form -->
+                          </tr>
+                      </table>
+                      <p><strong>Message:</strong></p>
+                      <div class="message">
+                          <p>
+                          ${formData.content}
+                          </p>
+                      </div>
+                  </div>
+              </div>
+          </body>
+          </html>`
         };
     
         // Send the email
