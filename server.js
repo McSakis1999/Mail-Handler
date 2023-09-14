@@ -34,7 +34,7 @@ app.post('/api/submit-form', async (req, res) => {
     const formData = req.body; // Form data sent from Vue.js app
     // Create a Nodemailer transporter
     const transporter = nodemailer.createTransport({
-      service: process.env.EMAIL_SERVICE, // Replace with your email service provider (e.g., Gmail, Outlook)
+      host: process.env.EMAIL_SERVICE, // Replace with your email service provider (e.g., Gmail, Outlook)
       auth: {
         user: process.env.EMAIL_USER, // Replace with your email address
         pass: process.env.EMAIL_PASS, // Replace with your email password or use environment variables for security
