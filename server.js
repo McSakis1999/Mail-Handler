@@ -36,7 +36,7 @@ app.post('/api/submit-form', async (req, res) => {
 
     const cvData = req.body.cv; // The file data received in the request body
     // Create a URL-friendly slug based on the applicant's name
-    const slug = createSlug(formData.name);
+    const slug = createFilenameFriendlySlug(formData.name);
     // Construct the filename for the CV attachment (if a file is attached)
     const cvFilename = cvData ? `${slug}-cv.pdf` : null;
 
