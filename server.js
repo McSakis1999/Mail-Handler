@@ -32,7 +32,7 @@ const handlebarOptions = {
 app.post('/api/submit-form', async (req, res) => {
   try {
     const formData = req.body; // Form data sent from Vue.js app
-    console.log('Trying to send email... data:',formData);
+    console.log('Trying to send email... data:',req.body);
 
     const cvData = req.body.file; // The file data received in the request body
     // Create a URL-friendly slug based on the applicant's name
