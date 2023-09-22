@@ -81,7 +81,7 @@ app.post('/api/submit-application-form',upload.single('file'), async (req, res) 
   try {
     console.log('hi');
     console.log(req.body.name,'1');
-    console.log(req.file.buffer,'2');
+    console.log(req.body.file.buffer,'2');
     console.log(req.file,'3'); 
     // const formData = req.body; // Form data sent from Vue.js app
     // console.log('Trying to send email... data:',formData);
