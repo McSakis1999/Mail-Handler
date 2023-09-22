@@ -86,7 +86,8 @@ app.post('/api/submit-application-form',upload.single('file'), async (req, res) 
     // Create a URL-friendly slug based on the applicant's name
     const slug = createFilenameFriendlySlug(formData.name);
     // Construct the filename for the CV attachment (if a file is attached)
-    const cvFilename = cvData ? `${slug}-cv.pdf` : null;
+    const fileExtension = cvData ? cvData.originalname.split('.').pop() : null;
+    const cvFilename = cvData ? `${slug}-cv.${fileExtension}` : null;
 
     // Create a Nodemailer transporter
     const transporter = nodemailer.createTransport({
