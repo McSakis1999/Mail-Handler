@@ -65,15 +65,13 @@ app.post('/api/submit-form', async (req, res) => {
             subject:formData.subject,
             content: formData.message
           },
-          attachments: [
-            cvData
-              ? {
-                  filename: cvFilename,
-                  content: cvData,
-                }
-              : null, // Attach the file if it exists, otherwise, don't attach it
-          ],
         };
+        cvData && (mailOptions.attachments = [
+          {
+            filename: cvFilename,
+            content: cvData,
+          },
+        ]);
     
         // Send the email
         await transporter.sendMail(mailOptions);
