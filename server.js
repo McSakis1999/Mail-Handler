@@ -80,9 +80,9 @@ const upload = multer({ storage: storage });
 app.post('/api/submit-application-form',upload.single('file'), async (req, res) => {
   try {
     console.log('hi');
-    console.log(req.body.name,'1');
-    console.log(req.body.file.buffer,'2');
+    console.log(req.body,'1');
     console.log(req.file,'3'); 
+    console.log(req.body.file.buffer,'2');
     // const formData = req.body; // Form data sent from Vue.js app
     // console.log('Trying to send email... data:',formData);
 
