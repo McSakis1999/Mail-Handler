@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const path = require('path')
 const cors = require('cors'); // Import the CORS middleware
 const nodemailer = require('nodemailer');
+const multer = require('multer'); //memory storage for files
 const app = express();
 
 app.use(bodyParser.json());
@@ -72,56 +73,64 @@ app.post('/api/submit-form', async (req, res) => {
     
 });
 
-app.post('/api/submit-application-form', async (req, res) => {
+
+const storage = multer.memoryStorage(); // Store files in memory
+const upload = multer({ storage: storage });
+
+app.post('/api/submit-application-form',upload.single('file'), async (req, res) => {
   try {
-    const formData = req.body; // Form data sent from Vue.js app
-    console.log('Trying to send email... data:',formData);
+    console.log('hi');
+    console.log(req.body.name,'1');
+    console.log(req.file.buffer,'2');
+    console.log(req.file,'3'); 
+    // const formData = req.body; // Form data sent from Vue.js app
+    // console.log('Trying to send email... data:',formData);
 
-    const cvData = req.body.cv; // The file data received in the request body
-    // Create a URL-friendly slug based on the applicant's name
-    const slug = createFilenameFriendlySlug(formData.name);
-    // Construct the filename for the CV attachment (if a file is attached)
-    const cvFilename = cvData ? `${slug}-cv.pdf` : null;
+    // const cvData = req.body.cv; // The file data received in the request body
+    // // Create a URL-friendly slug based on the applicant's name
+    // const slug = createFilenameFriendlySlug(formData.name);
+    // // Construct the filename for the CV attachment (if a file is attached)
+    // const cvFilename = cvData ? `${slug}-cv.pdf` : null;
 
-    // Create a Nodemailer transporter
-    const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_SERVICE, // Replace with your email service provider (e.g., Gmail, Outlook)
-      auth: {
-        user: process.env.EMAIL_USER, // Replace with your email address
-        pass: process.env.EMAIL_PASS, // Replace with your email password or use environment variables for security
-      },
-      port : 587,
-      secure: false
-    });
-    transporter.use('compile', hbs(handlebarOptions))
+    // // Create a Nodemailer transporter
+    // const transporter = nodemailer.createTransport({
+    //   host: process.env.EMAIL_SERVICE, // Replace with your email service provider (e.g., Gmail, Outlook)
+    //   auth: {
+    //     user: process.env.EMAIL_USER, // Replace with your email address
+    //     pass: process.env.EMAIL_PASS, // Replace with your email password or use environment variables for security
+    //   },
+    //   port : 587,
+    //   secure: false
+    // });
+    // transporter.use('compile', hbs(handlebarOptions))
     
-        // Create email content
-        const mailOptions = {
-          from: process.env.EMAIL_USER, // Replace with your email address
-          to: process.env.EMAIL_TO, // Replace with the recipient's email address
-          template: "email",
-          subject: formData.subject,
-          context: {
-            name:formData.name,
-            phone:formData.phone,
-            email:formData.email,
-            subject:formData.subject,
-            content: formData.message
-          },
-          attachments: [
-            cvData
-              ? {
-                  filename: cvFilename,
-                  content: cvData,
-                }
-              : null, // Attach the file if it exists, otherwise, don't attach it
-          ],
-        };
+    //     // Create email content
+    //     const mailOptions = {
+    //       from: process.env.EMAIL_USER, // Replace with your email address
+    //       to: process.env.EMAIL_TO_TEST, // Replace with the recipient's email address
+    //       template: "email",
+    //       subject: formData.subject,
+    //       context: {
+    //         name:formData.name,
+    //         phone:formData.phone,
+    //         email:formData.email,
+    //         subject:formData.subject,
+    //         content: formData.message
+    //       },
+    //       attachments: [
+    //         cvData
+    //           ? {
+    //               filename: cvFilename,
+    //               content: cvData,
+    //             }
+    //           : null, // Attach the file if it exists, otherwise, don't attach it
+    //       ],
+    //     };
     
-        // Send the email
-        await transporter.sendMail(mailOptions);
+    //     // Send the email
+    //     await transporter.sendMail(mailOptions);
     
-        res.status(200).json({ message: 'Form submitted successfully' });
+    //     res.status(200).json({ message: 'Form submitted successfully' });
   }
   catch (error) {
     console.error('Error:', error);
