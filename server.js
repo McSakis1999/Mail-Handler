@@ -32,6 +32,13 @@ const handlebarOptions = {
 app.post('/api/submit-form', async (req, res) => {
   try {
     const formData = req.body; // Form data sent from Vue.js app
+
+    const cvData = req.body.cv; // The file data received in the request body
+    // Create a URL-friendly slug based on the applicant's name
+    const slug = createSlug(formData.name);
+    // Construct the filename for the CV attachment (if a file is attached)
+    const cvFilename = cvData ? `${slug}-cv.pdf` : null;
+
     // Create a Nodemailer transporter
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_SERVICE, // Replace with your email service provider (e.g., Gmail, Outlook)
@@ -57,11 +64,14 @@ app.post('/api/submit-form', async (req, res) => {
             subject:formData.subject,
             content: formData.message
           },
-          // text: `
-          //   Name: ${formData.name}
-          //   Email: ${formData.email} - Phone: ${formData.phone}
-          //   Message: ${formData.message}
-          // `,
+          attachments: [
+            cvData
+              ? {
+                  filename: cvFilename,
+                  content: cvData,
+                }
+              : null, // Attach the file if it exists, otherwise, don't attach it
+          ],
         };
     
         // Send the email
@@ -74,6 +84,15 @@ app.post('/api/submit-form', async (req, res) => {
       }
     
 });
+
+function createFilenameFriendlySlug(str) {
+  // Replace non-alphanumeric characters (except for hyphens and underscores) with dashes
+  return str
+    .toLowerCase()
+    .replace(/[^a-z0-9-_]+/g, '-')
+    .replace(/^-+|-+$/g, '') // Remove leading and trailing dashes
+    .substr(0, 50); // Limit the slug to a reasonable length (e.g., 50 characters)
+}
 
 // Start the server
 const port = process.env.PORT || 3000;
