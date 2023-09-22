@@ -78,15 +78,16 @@ const storage = multer.memoryStorage(); // Store files in memory
 const upload = multer({ storage: storage });
 
 app.post('/api/submit-application-form',upload.single('file'), async (req, res) => {
-  try {
+  try {  
     const formData = req.body; // Form data sent from Vue.js app
     console.log('Trying to send email... data:',formData);
+    console.log('file',req.file.buffer);
 
     const cvData = req.file.buffer; // The file data received in the request body
     // Create a URL-friendly slug based on the applicant's name
     const slug = createFilenameFriendlySlug(formData.name);
     // Construct the filename for the CV attachment (if a file is attached)
-    const fileExtension = cvData ? cvData.originalname.split('.').pop() : null;
+    const fileExtension = cvData ? req.file.originalname.split('.').pop() : null;
     const cvFilename = cvData ? `${slug}-cv.${fileExtension}` : null;
 
     // Create a Nodemailer transporter
