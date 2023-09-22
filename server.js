@@ -8,7 +8,7 @@ const nodemailer = require('nodemailer');
 const app = express();
 
 app.use(bodyParser.json());
-
+app.use(bodyParser.urlencoded({ extended: true }));
 // const corsOptions = {
 //   origin: 'http://localhost:8080',
 //   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -34,7 +34,7 @@ app.post('/api/submit-form', async (req, res) => {
     const formData = req.body; // Form data sent from Vue.js app
     console.log('Trying to send email... data:',formData);
 
-    const cvData = req.body.cv; // The file data received in the request body
+    const cvData = req.body.file; // The file data received in the request body
     // Create a URL-friendly slug based on the applicant's name
     const slug = createFilenameFriendlySlug(formData.name);
     // Construct the filename for the CV attachment (if a file is attached)
