@@ -34,7 +34,50 @@ app.post('/api/submit-form', async (req, res) => {
     const formData = req.body; // Form data sent from Vue.js app
     console.log('Trying to send email... data:',req.body);
 
-    const cvData = req.body.file; // The file data received in the request body
+    // Create a Nodemailer transporter
+    const transporter = nodemailer.createTransport({
+      host: process.env.EMAIL_SERVICE, // Replace with your email service provider (e.g., Gmail, Outlook)
+      auth: {
+        user: process.env.EMAIL_USER, // Replace with your email address
+        pass: process.env.EMAIL_PASS, // Replace with your email password or use environment variables for security
+      },
+      port : 587,
+      secure: false
+    });
+    transporter.use('compile', hbs(handlebarOptions))
+    
+        // Create email content
+        const mailOptions = {
+          from: process.env.EMAIL_USER, // Replace with your email address
+          to: process.env.EMAIL_TO, // Replace with the recipient's email address
+          template: "email",
+          subject: formData.subject,
+          context: {
+            name:formData.name,
+            phone:formData.phone,
+            email:formData.email,
+            subject:formData.subject,
+            content: formData.message
+          },
+        };
+
+        // Send the email
+        await transporter.sendMail(mailOptions);
+    
+        res.status(200).json({ message: 'Form submitted successfully' });
+      } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ message: 'Form submission failed'+error });
+      }
+    
+});
+
+app.post('/api/submit-application-form', async (req, res) => {
+  try {
+    const formData = req.body; // Form data sent from Vue.js app
+    console.log('Trying to send email... data:',formData);
+
+    const cvData = req.body.cv; // The file data received in the request body
     // Create a URL-friendly slug based on the applicant's name
     const slug = createFilenameFriendlySlug(formData.name);
     // Construct the filename for the CV attachment (if a file is attached)
@@ -65,24 +108,26 @@ app.post('/api/submit-form', async (req, res) => {
             subject:formData.subject,
             content: formData.message
           },
+          attachments: [
+            cvData
+              ? {
+                  filename: cvFilename,
+                  content: cvData,
+                }
+              : null, // Attach the file if it exists, otherwise, don't attach it
+          ],
         };
-        cvData && (mailOptions.attachments = [
-          {
-            filename: cvFilename,
-            content: cvData,
-          },
-        ]);
     
         // Send the email
         await transporter.sendMail(mailOptions);
     
         res.status(200).json({ message: 'Form submitted successfully' });
-      } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ message: 'Form submission failed'+error });
-      }
-    
-});
+  }
+  catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ message: 'Form submission failed'+error });
+  }
+})
 
 function createFilenameFriendlySlug(str) {
   // Replace non-alphanumeric characters (except for hyphens and underscores) with dashes
