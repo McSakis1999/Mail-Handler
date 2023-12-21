@@ -98,7 +98,7 @@ app.post("/api/submit-siteForm", async (req, res) => {
       from: process.env.EMAIL_USER, // Replace with your email address
       to: process.env.EMAIL_TO, // Replace with the recipient's email address
       template: "websiteOffer",
-      subject: "Αίτημα Έργου από" + formData.companyName,
+      subject: "Αίτημα Έργου από " + formData.companyName,
       context: formData,
     };
 
