@@ -122,9 +122,9 @@ app.post(
     try {
       const formData = req.body; // Form data sent from Vue.js app
       console.log("Trying to send email... data:", formData);
-      console.log("file", req.file.buffer);
+      console.log("file", req.file ? req.file.buffer : "No file attached");
 
-      const cvData = req.file.buffer; // The file data received in the request body
+      const cvData = req.file ? req.file.buffer : null; // The file data received in the request body
       // Create a URL-friendly slug based on the applicant's name
       const slug = createFilenameFriendlySlug(formData.name);
       // Construct the filename for the CV attachment (if a file is attached)
