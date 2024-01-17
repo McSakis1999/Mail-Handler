@@ -135,10 +135,10 @@ app.post(
 
       // Create a Nodemailer transporter
       const transporter = nodemailer.createTransport({
-        host: process.env.EMAIL_SERVICE, // Replace with your email service provider (e.g., Gmail, Outlook)
+        host: process.env.GMAIL_SERVICE, // Replace with your email service provider (e.g., Gmail, Outlook)
         auth: {
-          user: process.env.EMAIL_USER, // Replace with your email address
-          pass: process.env.EMAIL_PASS, // Replace with your email password or use environment variables for security
+          user: process.env.GMAIL_USER, // Replace with your email address
+          pass: process.env.GMAIL_PASS, // Replace with your email password or use environment variables for security
         },
         port: 587,
         secure: false,
@@ -148,7 +148,7 @@ app.post(
       // Create email content
       const mailOptions = {
         from: process.env.EMAIL_USER, // Replace with your email address
-        to: process.env.EMAIL_TO_TEST, // Replace with the recipient's email address
+        to: process.env.EMAIL_TO, // Replace with the recipient's email address
         template: "email",
         subject: formData.subject,
         context: {
